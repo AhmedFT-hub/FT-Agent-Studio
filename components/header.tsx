@@ -38,7 +38,7 @@ export function Header() {
       <div className="container mx-auto px-4 flex h-20 items-center justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-black tracking-tight bg-gradient-to-r from-orange-600 via-amber-500 to-orange-600 bg-clip-text text-transparent">
-            FREIGHT TIGER AGENT STUDIO
+            FT AGENT STUDIO
           </h1>
           <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wider uppercase">
             Agent Orchestration Platform
