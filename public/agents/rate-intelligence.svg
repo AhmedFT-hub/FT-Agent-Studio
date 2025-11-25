@@ -1,0 +1,134 @@
+<svg width="1400" height="900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f1f5f9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="1400" height="900" fill="url(#bg)"/>
+  
+  <!-- Additional Route Insights Header -->
+  <circle cx="210" cy="80" r="16" fill="#8b5cf6" opacity="0.2"/>
+  <path d="M210,73 L210,87 M203,80 L217,80" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="235" y="88" font-family="Arial, sans-serif" font-size="22" fill="#1e293b" font-weight="700">Additional Route Insights</text>
+  
+  <!-- Rate Range Card -->
+  <rect x="200" y="130" width="480" height="130" rx="16" fill="#dbeafe"/>
+  <path d="M240,170 L250,175 L260,165 L270,180 L280,170" stroke="#3b82f6" stroke-width="2.5" fill="none"/>
+  <text x="240" y="210" font-family="Arial, sans-serif" font-size="14" fill="#3b82f6" font-weight="600" letter-spacing="0.5">RATE RANGE</text>
+  <text x="240" y="245" font-family="Arial, sans-serif" font-size="40" fill="#1e293b" font-weight="700">₹1,900</text>
+  <text x="240" y="268" font-family="Arial, sans-serif" font-size="13" fill="#3b82f6">min-max spread</text>
+  
+  <!-- Rate Volatility Card -->
+  <rect x="720" y="130" width="480" height="130" rx="16" fill="#fae8ff"/>
+  <path d="M760,170 L765,173 L770,167 L775,173 L780,167" stroke="#a855f7" stroke-width="2" fill="none"/>
+  <polygon points="770,175 775,170 765,170" fill="#a855f7"/>
+  <text x="760" y="210" font-family="Arial, sans-serif" font-size="14" fill="#a855f7" font-weight="600" letter-spacing="0.5">RATE VOLATILITY</text>
+  <text x="760" y="245" font-family="Arial, sans-serif" font-size="40" fill="#1e293b" font-weight="700">6.3%</text>
+  <text x="760" y="268" font-family="Arial, sans-serif" font-size="13" fill="#a855f7">price variation</text>
+  
+  <!-- Rate Trends Card -->
+  <rect x="150" y="320" width="1100" height="520" rx="20" fill="white" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.05))"/>
+  
+  <!-- Icon and Title -->
+  <rect x="190" y="360" width="50" height="50" rx="12" fill="#8b5cf6"/>
+  <path d="M205,385 L210,392 L215,380 L220,395 L225,388" stroke="white" stroke-width="2.5" fill="none"/>
+  
+  <text x="255" y="387" font-family="Arial, sans-serif" font-size="20" fill="#1e293b" font-weight="700">Rate Trends</text>
+  <text x="255" y="408" font-family="Arial, sans-serif" font-size="13" fill="#64748b">Chennai → Bhiwandi</text>
+  
+  <!-- Legend -->
+  <circle cx="850" cy="380" r="6" fill="#3b82f6"/>
+  <text x="865" y="385" font-family="Arial, sans-serif" font-size="13" fill="#64748b" font-weight="500">Market Rate</text>
+  
+  <circle cx="990" cy="380" r="6" fill="#22c55e"/>
+  <text x="1005" y="385" font-family="Arial, sans-serif" font-size="13" fill="#64748b" font-weight="500">Your Average</text>
+  
+  <!-- Chart Grid -->
+  <line x1="220" y1="450" x2="1200" y2="450" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="220" y1="500" x2="1200" y2="500" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="220" y1="550" x2="1200" y2="550" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="220" y1="600" x2="1200" y2="600" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="220" y1="650" x2="1200" y2="650" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="220" y1="700" x2="1200" y2="700" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="220" y1="750" x2="1200" y2="750" stroke="#e2e8f0" stroke-width="1"/>
+  
+  <!-- Y-axis labels -->
+  <text x="180" y="455" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="end">₹32,000</text>
+  <text x="180" y="505" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="end">₹31,800</text>
+  <text x="180" y="555" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="end">₹31,600</text>
+  <text x="180" y="605" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="end">₹31,400</text>
+  <text x="180" y="655" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="end">₹31,200</text>
+  <text x="180" y="705" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="end">₹31,000</text>
+  <text x="180" y="755" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="end">₹30,800</text>
+  
+  <!-- Market Rate Line (Blue) -->
+  <polyline points="
+    240,730
+    310,620
+    380,600
+    450,540
+    520,710
+    590,670
+    660,665
+    730,680
+    800,650
+    870,480
+    940,600
+    1010,595
+    1080,610
+    1150,740
+    1180,770"
+    stroke="#3b82f6" stroke-width="3" fill="none"/>
+  
+  <!-- Market Rate Points -->
+  <circle cx="240" cy="730" r="5" fill="#3b82f6"/>
+  <circle cx="310" cy="620" r="5" fill="#3b82f6"/>
+  <circle cx="380" cy="600" r="5" fill="#3b82f6"/>
+  <circle cx="450" cy="540" r="5" fill="#3b82f6"/>
+  <circle cx="520" cy="710" r="5" fill="#3b82f6"/>
+  <circle cx="590" cy="670" r="5" fill="#3b82f6"/>
+  <circle cx="660" cy="665" r="5" fill="#3b82f6"/>
+  <circle cx="730" cy="680" r="5" fill="#3b82f6"/>
+  <circle cx="800" cy="650" r="5" fill="#3b82f6"/>
+  <circle cx="870" cy="480" r="5" fill="#3b82f6"/>
+  <circle cx="940" cy="600" r="5" fill="#3b82f6"/>
+  <circle cx="1010" cy="595" r="5" fill="#3b82f6"/>
+  <circle cx="1080" cy="610" r="5" fill="#3b82f6"/>
+  <circle cx="1150" cy="740" r="5" fill="#3b82f6"/>
+  <circle cx="1180" cy="770" r="5" fill="#3b82f6"/>
+  
+  <!-- Your Average Line (Green Dashed) -->
+  <line x1="240" y1="645" x2="1180" y2="645" stroke="#22c55e" stroke-width="2.5" stroke-dasharray="8,6"/>
+  <circle cx="240" cy="645" r="5" fill="#22c55e"/>
+  <circle cx="310" cy="645" r="5" fill="#22c55e"/>
+  <circle cx="380" cy="645" r="5" fill="#22c55e"/>
+  <circle cx="450" cy="645" r="5" fill="#22c55e"/>
+  <circle cx="520" cy="645" r="5" fill="#22c55e"/>
+  <circle cx="590" cy="645" r="5" fill="#22c55e"/>
+  <circle cx="660" cy="645" r="5" fill="#22c55e"/>
+  <circle cx="730" cy="645" r="5" fill="#22c55e"/>
+  <circle cx="800" cy="645" r="5" fill="#22c55e"/>
+  <circle cx="870" cy="645" r="5" fill="#22c55e"/>
+  <circle cx="940" cy="645" r="5" fill="#22c55e"/>
+  <circle cx="1010" cy="645" r="5" fill="#22c55e"/>
+  <circle cx="1080" cy="645" r="5" fill="#22c55e"/>
+  <circle cx="1150" cy="645" r="5" fill="#22c55e"/>
+  <circle cx="1180" cy="645" r="5" fill="#22c55e"/>
+  
+  <!-- X-axis labels -->
+  <text x="240" y="780" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">Jan-24</text>
+  <text x="310" y="780" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">Feb-24</text>
+  <text x="380" y="780" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">Mar-24</text>
+  <text x="450" y="780" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">Apr-24</text>
+  <text x="520" y="780" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">May-24</text>
+  <text x="590" y="780" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">Jun-24</text>
+  <text x="660" y="780" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">Jul-24</text>
+  <text x="730" y="780" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">Aug-24</text>
+  <text x="800" y="780" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">Sep-24</text>
+  <text x="870" y="780" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">Oct-24</text>
+  <text x="940" y="780" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">Nov-24</text>
+  <text x="1010" y="780" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">Dec-24</text>
+  <text x="1180" y="780" font-family="Arial, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">Jan-25</text>
+</svg>

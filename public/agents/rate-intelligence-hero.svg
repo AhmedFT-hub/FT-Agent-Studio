@@ -1,0 +1,92 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e0e7ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5f3ff;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="400" fill="url(#heroGrad)"/>
+  
+  <!-- Badge -->
+  <rect x="330" y="40" width="140" height="24" rx="12" fill="white" opacity="0.9"/>
+  <circle cx="345" cy="52" r="4" fill="#6366f1"/>
+  <text x="355" y="57" font-family="Arial, sans-serif" font-size="11" fill="#6366f1" font-weight="500">Powered by Real-Time Market Data</text>
+  
+  <!-- Main Title -->
+  <text x="400" y="110" font-family="Arial, sans-serif" font-size="42" fill="#1e293b" font-weight="800" text-anchor="middle">
+    Optimize Your Logistics with
+  </text>
+  <text x="400" y="160" font-family="Arial, sans-serif" font-size="42" fill="#6366f1" font-weight="800" text-anchor="middle">
+    Data-Driven Insights
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="400" y="200" font-family="Arial, sans-serif" font-size="13" fill="#64748b" text-anchor="middle">
+    Make informed decisions with comprehensive freight rate analysis and transporter
+  </text>
+  <text x="400" y="220" font-family="Arial, sans-serif" font-size="13" fill="#64748b" text-anchor="middle">
+    performance metrics. Benchmark your logistics operations against market standards
+  </text>
+  
+  <!-- Feature Pills -->
+  <rect x="220" y="245" width="115" height="32" rx="16" fill="white"/>
+  <circle cx="235" cy="261" r="6" fill="#22c55e"/>
+  <path d="M233,261 L236,264 L239,258" stroke="white" stroke-width="1.5" fill="none"/>
+  <text x="248" y="265" font-family="Arial, sans-serif" font-size="11" fill="#1e293b" font-weight="500">Real-time rates</text>
+  
+  <rect x="350" y="245" width="150" height="32" rx="16" fill="white"/>
+  <circle cx="365" cy="261" r="6" fill="#22c55e"/>
+  <path d="M363,261 L366,264 L369,258" stroke="white" stroke-width="1.5" fill="none"/>
+  <text x="378" y="265" font-family="Arial, sans-serif" font-size="11" fill="#1e293b" font-weight="500">Verified transporters</text>
+  
+  <rect x="515" y="245" width="115" height="32" rx="16" fill="white"/>
+  <circle cx="530" cy="261" r="6" fill="#22c55e"/>
+  <path d="M528,261 L531,264 L534,258" stroke="white" stroke-width="1.5" fill="none"/>
+  <text x="543" y="265" font-family="Arial, sans-serif" font-size="11" fill="#1e293b" font-weight="500">24/7 tracking</text>
+  
+  <!-- Card 1 - Freight Benchmarking -->
+  <rect x="80" y="300" width="320" height="90" rx="12" fill="white" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.1))"/>
+  
+  <!-- Icon -->
+  <rect x="100" y="318" width="50" height="50" rx="10" fill="#6366f1"/>
+  <path d="M120,335 L125,342 L130,330 L135,345 L140,338" stroke="white" stroke-width="2.5" fill="none"/>
+  
+  <!-- Text -->
+  <text x="165" y="338" font-family="Arial, sans-serif" font-size="16" fill="#1e293b" font-weight="700">
+    Freight Benchmarking
+  </text>
+  <text x="165" y="357" font-family="Arial, sans-serif" font-size="11" fill="#64748b">
+    Analyze freight rates, compare market trends, and
+  </text>
+  <text x="165" y="372" font-family="Arial, sans-serif" font-size="11" fill="#64748b">
+    optimize your shipping costs with real-time data
+  </text>
+  
+  <!-- Active Badge -->
+  <rect x="310" y="320" width="60" height="22" rx="6" fill="#eff6ff"/>
+  <text x="326" y="335" font-family="Arial, sans-serif" font-size="11" fill="#3b82f6" font-weight="600">Active</text>
+  <path d="M351,331 L354,334" stroke="#3b82f6" stroke-width="1.5" fill="none"/>
+  
+  <!-- Card 2 - Transporter Benchmarking -->
+  <rect x="420" y="300" width="320" height="90" rx="12" fill="white" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.1))"/>
+  
+  <!-- Icon -->
+  <rect x="440" y="318" width="50" height="50" rx="10" fill="#f1f5f9"/>
+  <rect x="455" y="328" width="20" height="15" rx="2" fill="#64748b"/>
+  <rect x="455" y="345" width="20" height="8" rx="2" fill="#64748b"/>
+  <circle cx="460" cy="355" r="2" fill="#64748b"/>
+  <circle cx="470" cy="355" r="2" fill="#64748b"/>
+  
+  <!-- Text -->
+  <text x="505" y="338" font-family="Arial, sans-serif" font-size="16" fill="#1e293b" font-weight="700">
+    Transporter Benchmarking
+  </text>
+  <text x="505" y="357" font-family="Arial, sans-serif" font-size="11" fill="#64748b">
+    Evaluate transporter performance, discover reliable
+  </text>
+  <text x="505" y="372" font-family="Arial, sans-serif" font-size="11" fill="#64748b">
+    partners, and optimize your network
+  </text>
+</svg>

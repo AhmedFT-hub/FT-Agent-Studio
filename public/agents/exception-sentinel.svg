@@ -1,0 +1,42 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="800" height="400" fill="url(#bg3)"/>
+  
+  <!-- Alert Dashboard -->
+  <rect x="60" y="60" width="320" height="280" rx="12" fill="rgba(255,255,255,0.15)" backdrop-filter="blur(10px)"/>
+  
+  <!-- Alert Items -->
+  <rect x="80" y="80" width="280" height="60" rx="8" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="105" cy="110" r="8" fill="#fef2f2"/>
+  <text x="130" y="105" font-family="Arial" font-size="13" fill="white" font-weight="bold">DELAY DETECTED</text>
+  <text x="130" y="125" font-family="Arial" font-size="11" fill="rgba(255,255,255,0.8)">Shipment #12453 - 2hrs behind</text>
+  
+  <rect x="80" y="155" width="280" height="60" rx="8" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="105" cy="185" r="8" fill="#fef3c7"/>
+  <text x="130" y="180" font-family="Arial" font-size="13" fill="white" font-weight="bold">WEATHER ALERT</text>
+  <text x="130" y="200" font-family="Arial" font-size="11" fill="rgba(255,255,255,0.8)">Storm on Route 66</text>
+  
+  <rect x="80" y="230" width="280" height="60" rx="8" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="105" cy="260" r="8" fill="#d1fae5"/>
+  <text x="130" y="255" font-family="Arial" font-size="13" fill="white" font-weight="bold">RESOLVED</text>
+  <text x="130" y="275" font-family="Arial" font-size="11" fill="rgba(255,255,255,0.8)">Shipment #12450 delivered</text>
+  
+  <!-- Stats Panel -->
+  <rect x="420" y="60" width="320" height="130" rx="12" fill="rgba(255,255,255,0.15)"/>
+  <text x="450" y="95" font-family="Arial" font-size="14" fill="rgba(255,255,255,0.9)">ACTIVE ALERTS</text>
+  <text x="450" y="145" font-family="Arial" font-size="56" fill="white" font-weight="bold">23</text>
+  
+  <rect x="420" y="210" width="150" height="130" rx="12" fill="rgba(255,255,255,0.15)"/>
+  <text x="440" y="240" font-family="Arial" font-size="11" fill="rgba(255,255,255,0.9)">CRITICAL</text>
+  <text x="440" y="280" font-family="Arial" font-size="40" fill="#fef2f2" font-weight="bold">5</text>
+  
+  <rect x="590" y="210" width="150" height="130" rx="12" fill="rgba(255,255,255,0.15)"/>
+  <text x="610" y="240" font-family="Arial" font-size="11" fill="rgba(255,255,255,0.9)">RESOLVED</text>
+  <text x="610" y="280" font-family="Arial" font-size="40" fill="#d1fae5" font-weight="bold">142</text>
+</svg>

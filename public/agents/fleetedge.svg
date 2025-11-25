@@ -1,0 +1,44 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0891b2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="800" height="400" fill="url(#bg2)"/>
+  
+  <!-- Map Background -->
+  <rect x="50" y="60" width="700" height="280" rx="16" fill="rgba(255,255,255,0.1)"/>
+  
+  <!-- Route Lines -->
+  <path d="M 100 180 Q 250 100 400 180 T 700 180" stroke="white" stroke-width="4" fill="none" stroke-dasharray="8,4"/>
+  <path d="M 100 180 Q 300 250 500 180 T 700 180" stroke="#4ade80" stroke-width="4" fill="none" opacity="0.8"/>
+  
+  <!-- Location Pins -->
+  <circle cx="100" cy="180" r="12" fill="white"/>
+  <circle cx="400" cy="180" r="12" fill="white"/>
+  <circle cx="700" cy="180" r="12" fill="#4ade80"/>
+  
+  <!-- Route Cards -->
+  <rect x="80" y="100" width="140" height="60" rx="8" fill="rgba(255,255,255,0.2)"/>
+  <text x="95" y="125" font-family="Arial" font-size="11" fill="white">ROUTE A</text>
+  <text x="95" y="145" font-family="Arial" font-size="18" fill="white" font-weight="bold">245 mi</text>
+  
+  <rect x="580" y="100" width="140" height="60" rx="8" fill="rgba(255,255,255,0.2)"/>
+  <text x="595" y="125" font-family="Arial" font-size="11" fill="#4ade80">OPTIMAL</text>
+  <text x="595" y="145" font-family="Arial" font-size="18" fill="white" font-weight="bold">198 mi</text>
+  
+  <!-- Stats Bar -->
+  <rect x="50" y="280" width="220" height="60" rx="8" fill="rgba(255,255,255,0.2)"/>
+  <text x="70" y="305" font-family="Arial" font-size="12" fill="white">FLEET UTILIZATION</text>
+  <text x="70" y="330" font-family="Arial" font-size="24" fill="white" font-weight="bold">87.5%</text>
+  
+  <rect x="290" y="280" width="220" height="60" rx="8" fill="rgba(255,255,255,0.2)"/>
+  <text x="310" y="305" font-family="Arial" font-size="12" fill="white">AVG SPEED</text>
+  <text x="310" y="330" font-family="Arial" font-size="24" fill="white" font-weight="bold">52 mph</text>
+  
+  <rect x="530" y="280" width="220" height="60" rx="8" fill="rgba(255,255,255,0.2)"/>
+  <text x="550" y="305" font-family="Arial" font-size="12" fill="white">ACTIVE TRUCKS</text>
+  <text x="550" y="330" font-family="Arial" font-size="24" fill="white" font-weight="bold">124</text>
+</svg>

@@ -1,0 +1,53 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg7" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#334155;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="800" height="400" fill="url(#bg7)"/>
+  
+  <!-- Dashboard Grid -->
+  <!-- Top KPI Cards -->
+  <rect x="60" y="60" width="160" height="100" rx="10" fill="rgba(59,130,246,0.9)"/>
+  <text x="80" y="90" font-family="Arial" font-size="11" fill="rgba(255,255,255,0.9)">TOTAL SHIPMENTS</text>
+  <text x="80" y="130" font-family="Arial" font-size="36" fill="white" font-weight="bold">1,247</text>
+  
+  <rect x="240" y="60" width="160" height="100" rx="10" fill="rgba(16,185,129,0.9)"/>
+  <text x="260" y="90" font-family="Arial" font-size="11" fill="rgba(255,255,255,0.9)">ON-TIME %</text>
+  <text x="260" y="130" font-family="Arial" font-size="36" fill="white" font-weight="bold">97.3</text>
+  
+  <rect x="420" y="60" width="160" height="100" rx="10" fill="rgba(245,158,11,0.9)"/>
+  <text x="440" y="90" font-family="Arial" font-size="11" fill="rgba(255,255,255,0.9)">ALERTS</text>
+  <text x="440" y="130" font-family="Arial" font-size="36" fill="white" font-weight="bold">23</text>
+  
+  <rect x="600" y="60" width="160" height="100" rx="10" fill="rgba(139,92,246,0.9)"/>
+  <text x="620" y="90" font-family="Arial" font-size="11" fill="rgba(255,255,255,0.9)">COST SAVED</text>
+  <text x="620" y="130" font-family="Arial" font-size="28" fill="white" font-weight="bold">$24.5K</text>
+  
+  <!-- Chart Area -->
+  <rect x="60" y="180" width="340" height="160" rx="10" fill="rgba(255,255,255,0.05)"/>
+  <text x="80" y="210" font-family="Arial" font-size="13" fill="white" font-weight="bold">Performance Trend</text>
+  
+  <!-- Bar Chart -->
+  <rect x="90" y="250" width="30" height="60" rx="4" fill="#3b82f6" opacity="0.8"/>
+  <rect x="135" y="240" width="30" height="70" rx="4" fill="#3b82f6" opacity="0.8"/>
+  <rect x="180" y="230" width="30" height="80" rx="4" fill="#3b82f6"/>
+  <rect x="225" y="245" width="30" height="65" rx="4" fill="#3b82f6" opacity="0.8"/>
+  <rect x="270" y="235" width="30" height="75" rx="4" fill="#3b82f6" opacity="0.8"/>
+  <rect x="315" y="220" width="30" height="90" rx="4" fill="#10b981"/>
+  
+  <!-- Activity Feed -->
+  <rect x="420" y="180" width="340" height="160" rx="10" fill="rgba(255,255,255,0.05)"/>
+  <text x="440" y="210" font-family="Arial" font-size="13" fill="white" font-weight="bold">Recent Activity</text>
+  
+  <circle cx="450" cy="240" r="6" fill="#10b981"/>
+  <text x="470" y="244" font-family="Arial" font-size="11" fill="white">Shipment SH-5783 delivered</text>
+  
+  <circle cx="450" cy="270" r="6" fill="#f59e0b"/>
+  <text x="470" y="274" font-family="Arial" font-size="11" fill="white">Delay alert for SH-5790</text>
+  
+  <circle cx="450" cy="300" r="6" fill="#10b981"/>
+  <text x="470" y="304" font-family="Arial" font-size="11" fill="white">Route optimized - saved $245</text>
+</svg>
