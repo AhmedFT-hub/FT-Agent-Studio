@@ -189,32 +189,6 @@ export function AgentModal({ agent, isOpen, onClose }: AgentModalProps) {
                   sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
                 />
               </div>
-
-              {/* Footer */}
-              <div className="flex items-center justify-between px-6 py-4 border-t border-orange-200/30 dark:border-orange-900/30 bg-gradient-to-r from-orange-50 via-orange-100/50 to-orange-50 dark:from-[#0d1829] dark:via-orange-950/20 dark:to-[#0d1829] backdrop-blur-xl relative overflow-hidden">
-                {/* Decorative gradient orbs */}
-                <div className="absolute top-0 left-0 w-48 h-48 bg-gradient-to-br from-orange-400/20 to-transparent rounded-full blur-3xl"></div>
-                
-                <div className="flex flex-wrap gap-2 relative z-10">
-                  {agent.tags.slice(0, 5).map((tag, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-gradient-to-r from-orange-100 to-orange-200/80 dark:from-orange-950/50 dark:to-orange-900/30 text-orange-700 dark:text-orange-300 border border-orange-300/50 dark:border-orange-800/50 backdrop-blur-sm shadow-sm"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => window.open(agent.vercelUrl, "_blank")}
-                  className="ml-4 hover:bg-white/50 dark:hover:bg-black/30 backdrop-blur-sm relative z-10"
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Open in New Tab
-                </Button>
-              </div>
             </div>
           </motion.div>
         </>
