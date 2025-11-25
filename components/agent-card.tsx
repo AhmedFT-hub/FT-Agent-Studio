@@ -51,7 +51,7 @@ export function AgentCard({ agent, onClick }: AgentCardProps) {
         {/* Content */}
         <div className="flex-1 flex flex-col p-6 relative z-10">
           {/* Name */}
-          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+          <h3 className="font-heading text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
             {agent.name}
           </h3>
 

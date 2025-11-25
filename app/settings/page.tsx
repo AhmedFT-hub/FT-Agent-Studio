@@ -114,7 +114,7 @@ export default function SettingsPage() {
 
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-black bg-gradient-to-r from-orange-600 via-amber-500 to-orange-600 bg-clip-text text-transparent mb-2">
+          <h1 className="font-heading text-4xl font-black bg-gradient-to-r from-orange-600 via-amber-500 to-orange-600 bg-clip-text text-transparent mb-2">
             Agent Settings
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
@@ -136,7 +136,7 @@ export default function SettingsPage() {
         {/* Add Agent Form */}
         {isAdding && (
           <Card className="p-6 mb-8 bg-white/80 dark:bg-[#1a2332]/80 backdrop-blur-xl border-gray-200/50 dark:border-gray-700/50">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+            <h2 className="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
               Add New Agent
             </h2>
 
@@ -307,7 +307,7 @@ export default function SettingsPage() {
 
         {/* Custom Agents List */}
         <div className="space-y-4">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <h2 className="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
             Custom Agents ({customAgents.length})
           </h2>
 
@@ -327,7 +327,7 @@ export default function SettingsPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                        <h3 className="font-heading text-xl font-bold text-gray-900 dark:text-gray-100">
                           {agent.name}
                         </h3>
                         <Badge variant="outline">{agent.category}</Badge>

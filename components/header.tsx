@@ -37,7 +37,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-white/20 bg-white/80 dark:bg-[#0d1829]/80 backdrop-blur-xl shadow-lg shadow-orange-500/5">
       <div className="container mx-auto px-4 flex h-20 items-center justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-black tracking-tight bg-gradient-to-r from-orange-600 via-amber-500 to-orange-600 bg-clip-text text-transparent">
+          <h1 className="font-heading text-3xl font-black tracking-tight bg-gradient-to-r from-orange-600 via-amber-500 to-orange-600 bg-clip-text text-transparent">
             FT AGENT STUDIO
           </h1>
           <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wider uppercase">

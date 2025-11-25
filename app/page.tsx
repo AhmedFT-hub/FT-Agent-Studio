@@ -66,7 +66,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">
+                  <h2 className="font-heading text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">
                     Sandbox Environment
                   </h2>
                   <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
