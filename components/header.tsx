@@ -1,13 +1,16 @@
 "use client";
 
-import { Moon, Sun, Maximize, Minimize } from "lucide-react";
+import { Moon, Sun, Maximize, Minimize, Settings } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 export function Header() {
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
+  const pathname = usePathname();
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
@@ -43,6 +46,17 @@ export function Header() {
         </div>
         
         <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => router.push(pathname === "/settings" ? "/" : "/settings")}
+            className="rounded-full bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border-gray-200/50 dark:border-gray-700/50 hover:scale-105 transition-transform shadow-lg"
+            title="Settings"
+          >
+            <Settings className="h-[1.2rem] w-[1.2rem]" />
+            <span className="sr-only">Settings</span>
+          </Button>
+          
           <Button
             variant="outline"
             size="icon"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Header } from "@/components/header";
 import { AgentCard } from "@/components/agent-card";
 import { AgentModal } from "@/components/agent-modal";
@@ -12,11 +12,24 @@ import { Input } from "@/components/ui/input";
 export default function Home() {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [customAgents, setCustomAgents] = useState<Agent[]>([]);
+
+  useEffect(() => {
+    // Load custom agents from localStorage
+    const stored = localStorage.getItem("customAgents");
+    if (stored) {
+      setCustomAgents(JSON.parse(stored));
+    }
+  }, []);
+
+  const allAgents = useMemo(() => {
+    return [...agents, ...customAgents];
+  }, [customAgents]);
 
   const filteredAgents = useMemo(() => {
-    if (searchQuery === "") return agents;
+    if (searchQuery === "") return allAgents;
     
-    return agents.filter((agent) => {
+    return allAgents.filter((agent) => {
       const query = searchQuery.toLowerCase();
       return (
         agent.name.toLowerCase().includes(query) ||
@@ -25,7 +38,7 @@ export default function Home() {
         agent.category.toLowerCase().includes(query)
       );
     });
-  }, [searchQuery]);
+  }, [searchQuery, allAgents]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-orange-50/20 to-gray-100 dark:from-[#0d1829] dark:via-[#1a2332] dark:to-[#0d1829] relative overflow-hidden">

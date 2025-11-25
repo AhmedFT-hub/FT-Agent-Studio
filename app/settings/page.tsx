@@ -1,0 +1,369 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Header } from "@/components/header";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, Plus, Trash2, Save } from "lucide-react";
+import { Agent } from "@/lib/types";
+
+export default function SettingsPage() {
+  const router = useRouter();
+  const [customAgents, setCustomAgents] = useState<Agent[]>([]);
+  const [isAdding, setIsAdding] = useState(false);
+  const [newAgent, setNewAgent] = useState<Partial<Agent>>({
+    name: "",
+    description: "",
+    category: "Other",
+    tags: [],
+    status: "Live",
+    vercelUrl: "",
+    imageUrl: "/agents/rate-intelligence.svg",
+    primaryActionLabel: "See it in action",
+  });
+  const [tagInput, setTagInput] = useState("");
+
+  useEffect(() => {
+    // Load custom agents from localStorage
+    const stored = localStorage.getItem("customAgents");
+    if (stored) {
+      setCustomAgents(JSON.parse(stored));
+    }
+  }, []);
+
+  const saveAgents = (agents: Agent[]) => {
+    localStorage.setItem("customAgents", JSON.stringify(agents));
+    setCustomAgents(agents);
+  };
+
+  const handleAddAgent = () => {
+    if (!newAgent.name || !newAgent.description || !newAgent.vercelUrl) {
+      alert("Please fill in all required fields (Name, Description, URL)");
+      return;
+    }
+
+    const agent: Agent = {
+      id: `custom-${Date.now()}`,
+      name: newAgent.name,
+      slug: newAgent.name.toLowerCase().replace(/\s+/g, "-"),
+      description: newAgent.description,
+      category: newAgent.category as any || "Other",
+      tags: newAgent.tags || [],
+      status: newAgent.status as any || "Live",
+      vercelUrl: newAgent.vercelUrl,
+      imageUrl: newAgent.imageUrl || "/agents/rate-intelligence.svg",
+      lastUpdated: new Date().toLocaleDateString("en-US", { month: "short", year: "numeric" }),
+      primaryActionLabel: newAgent.primaryActionLabel || "See it in action",
+    };
+
+    saveAgents([...customAgents, agent]);
+    setIsAdding(false);
+    setNewAgent({
+      name: "",
+      description: "",
+      category: "Other",
+      tags: [],
+      status: "Live",
+      vercelUrl: "",
+      imageUrl: "/agents/rate-intelligence.svg",
+      primaryActionLabel: "See it in action",
+    });
+    setTagInput("");
+  };
+
+  const handleDeleteAgent = (id: string) => {
+    if (confirm("Are you sure you want to delete this agent?")) {
+      saveAgents(customAgents.filter((a) => a.id !== id));
+    }
+  };
+
+  const handleAddTag = () => {
+    if (tagInput.trim() && newAgent.tags && !newAgent.tags.includes(tagInput.trim())) {
+      setNewAgent({
+        ...newAgent,
+        tags: [...(newAgent.tags || []), tagInput.trim()],
+      });
+      setTagInput("");
+    }
+  };
+
+  const handleRemoveTag = (tag: string) => {
+    setNewAgent({
+      ...newAgent,
+      tags: (newAgent.tags || []).filter((t) => t !== tag),
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-orange-50/20 to-gray-100 dark:from-[#0d1829] dark:via-[#1a2332] dark:to-[#0d1829]">
+      <Header />
+
+      <main className="container mx-auto px-4 py-8">
+        {/* Back Button */}
+        <Button
+          variant="ghost"
+          onClick={() => router.push("/")}
+          className="mb-6 hover:bg-white/50 dark:hover:bg-white/5"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Agents
+        </Button>
+
+        {/* Page Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-black bg-gradient-to-r from-orange-600 via-amber-500 to-orange-600 bg-clip-text text-transparent mb-2">
+            Agent Settings
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Add and manage custom AI agents
+          </p>
+        </div>
+
+        {/* Add New Agent Button */}
+        {!isAdding && (
+          <Button
+            onClick={() => setIsAdding(true)}
+            className="mb-6 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 shadow-lg"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add New Agent
+          </Button>
+        )}
+
+        {/* Add Agent Form */}
+        {isAdding && (
+          <Card className="p-6 mb-8 bg-white/80 dark:bg-[#1a2332]/80 backdrop-blur-xl border-gray-200/50 dark:border-gray-700/50">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+              Add New Agent
+            </h2>
+
+            <div className="space-y-4">
+              {/* Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Agent Name *
+                </label>
+                <Input
+                  placeholder="e.g., Route Optimizer"
+                  value={newAgent.name}
+                  onChange={(e) => setNewAgent({ ...newAgent, name: e.target.value })}
+                  className="bg-white dark:bg-[#0d1829]"
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Description *
+                </label>
+                <textarea
+                  placeholder="Describe what this agent does..."
+                  value={newAgent.description}
+                  onChange={(e) => setNewAgent({ ...newAgent, description: e.target.value })}
+                  className="w-full min-h-[100px] px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#0d1829] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+              </div>
+
+              {/* URL */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Agent URL *
+                </label>
+                <Input
+                  placeholder="https://your-agent.vercel.app"
+                  value={newAgent.vercelUrl}
+                  onChange={(e) => setNewAgent({ ...newAgent, vercelUrl: e.target.value })}
+                  className="bg-white dark:bg-[#0d1829]"
+                />
+              </div>
+
+              {/* Category */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Category
+                </label>
+                <select
+                  value={newAgent.category}
+                  onChange={(e) => setNewAgent({ ...newAgent, category: e.target.value as any })}
+                  className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#0d1829] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                >
+                  <option value="Planning">Planning</option>
+                  <option value="Tracking">Tracking</option>
+                  <option value="Intelligence">Intelligence</option>
+                  <option value="Finance">Finance</option>
+                  <option value="Control Tower">Control Tower</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              {/* Status */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Status
+                </label>
+                <select
+                  value={newAgent.status}
+                  onChange={(e) => setNewAgent({ ...newAgent, status: e.target.value as any })}
+                  className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#0d1829] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                >
+                  <option value="Live">Live</option>
+                  <option value="Beta">Beta</option>
+                  <option value="Experimental">Experimental</option>
+                </select>
+              </div>
+
+              {/* Tags */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Tags
+                </label>
+                <div className="flex gap-2 mb-2">
+                  <Input
+                    placeholder="Add a tag..."
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleAddTag();
+                      }
+                    }}
+                    className="bg-white dark:bg-[#0d1829]"
+                  />
+                  <Button
+                    type="button"
+                    onClick={handleAddTag}
+                    variant="outline"
+                    className="shrink-0"
+                  >
+                    Add Tag
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {newAgent.tags?.map((tag, index) => (
+                    <Badge
+                      key={index}
+                      variant="secondary"
+                      className="cursor-pointer hover:bg-red-100 dark:hover:bg-red-900"
+                      onClick={() => handleRemoveTag(tag)}
+                    >
+                      {tag} ✕
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Image URL */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Image URL (optional)
+                </label>
+                <Input
+                  placeholder="/agents/your-image.svg"
+                  value={newAgent.imageUrl}
+                  onChange={(e) => setNewAgent({ ...newAgent, imageUrl: e.target.value })}
+                  className="bg-white dark:bg-[#0d1829]"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Leave blank to use default image
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-4">
+                <Button
+                  onClick={handleAddAgent}
+                  className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 shadow-lg"
+                >
+                  <Save className="mr-2 h-4 w-4" />
+                  Save Agent
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setIsAdding(false);
+                    setNewAgent({
+                      name: "",
+                      description: "",
+                      category: "Other",
+                      tags: [],
+                      status: "Live",
+                      vercelUrl: "",
+                      imageUrl: "/agents/rate-intelligence.svg",
+                      primaryActionLabel: "See it in action",
+                    });
+                    setTagInput("");
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Custom Agents List */}
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            Custom Agents ({customAgents.length})
+          </h2>
+
+          {customAgents.length === 0 ? (
+            <Card className="p-8 text-center bg-white/50 dark:bg-white/5 backdrop-blur-xl border-gray-200/50 dark:border-gray-700/50">
+              <p className="text-gray-600 dark:text-gray-400">
+                No custom agents yet. Click "Add New Agent" to create one.
+              </p>
+            </Card>
+          ) : (
+            <div className="grid gap-4">
+              {customAgents.map((agent) => (
+                <Card
+                  key={agent.id}
+                  className="p-6 bg-white/80 dark:bg-[#1a2332]/80 backdrop-blur-xl border-gray-200/50 dark:border-gray-700/50"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                          {agent.name}
+                        </h3>
+                        <Badge variant="outline">{agent.category}</Badge>
+                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        {agent.description}
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {agent.tags.map((tag, index) => (
+                          <span
+                            key={index}
+                            className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gradient-to-r from-orange-50 to-orange-100/80 dark:from-orange-950/30 dark:to-orange-900/20 text-orange-700 dark:text-orange-300 border border-orange-200/50 dark:border-orange-800/50"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        URL: {agent.vercelUrl}
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDeleteAgent(agent.id)}
+                      className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}
