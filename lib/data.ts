@@ -113,7 +113,7 @@ export const agents: Agent[] = [
     category: "Intelligence",
     tags: [],
     status: "Live",
-    vercelUrl: "https://freight-intelligence-hub.vercel.app",
+    vercelUrl: "https://freight-intelligence-hub.vercel.app/",
     imageUrl: "/agents/rate-intelligence.svg",
     lastUpdated: "Nov 2025",
     primaryActionLabel: "See it in action"
