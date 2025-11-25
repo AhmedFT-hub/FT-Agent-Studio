@@ -52,6 +52,34 @@ export default function Home() {
       <Header />
       
       <main className="container mx-auto px-4 py-8 relative z-10">
+        {/* Sandbox Environment Notice */}
+        <div className="max-w-4xl mx-auto mb-8">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-orange-500/10 rounded-2xl blur-xl"></div>
+            <div className="relative bg-white/60 dark:bg-[#1a2332]/60 backdrop-blur-xl border border-orange-200/50 dark:border-orange-900/50 rounded-2xl p-6 shadow-lg">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">
+                    Sandbox Environment
+                  </h2>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                    This is an interactive sandbox where you can explore and test the individual capabilities of our AI agents. 
+                    Each agent represents a specialized component of our core platform modules, designed to streamline logistics operations. 
+                    Select any agent to simulate its functionality in a live demo environment.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Search Bar */}
         <div className="max-w-2xl mx-auto mb-12">
           <div className="relative group">
