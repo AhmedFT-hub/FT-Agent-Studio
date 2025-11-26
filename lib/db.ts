@@ -1,9 +1,21 @@
 import { neon } from '@neondatabase/serverless';
 
-const sql = neon(process.env.DATABASE_URL!);
+// Lazy initialization to avoid build-time errors
+let sql: ReturnType<typeof neon> | null = null;
+
+function getSQL() {
+  if (!sql) {
+    if (!process.env.DATABASE_URL) {
+      throw new Error('DATABASE_URL environment variable is not set');
+    }
+    sql = neon(process.env.DATABASE_URL);
+  }
+  return sql;
+}
 
 export async function initDB() {
   try {
+    const sql = getSQL();
     // Create custom_agents table
     await sql`
       CREATE TABLE IF NOT EXISTS custom_agents (
@@ -47,10 +59,12 @@ export async function initDB() {
 
 export async function getCustomAgents() {
   try {
+    const sql = getSQL();
     const result = await sql`
       SELECT * FROM custom_agents ORDER BY created_at DESC
     `;
-    return result.rows.map(row => ({
+    // Neon returns results directly as an array
+    return (result as any[]).map(row => ({
       id: row.id,
       name: row.name,
       slug: row.slug,
@@ -71,11 +85,13 @@ export async function getCustomAgents() {
 
 export async function getAgentOverrides() {
   try {
+    const sql = getSQL();
     const result = await sql`
       SELECT * FROM agent_overrides
     `;
     const overrides: Record<string, any> = {};
-    result.rows.forEach(row => {
+    // Neon returns results directly as an array
+    (result as any[]).forEach(row => {
       overrides[row.agent_id] = {
         name: row.name,
         description: row.description,
@@ -102,6 +118,7 @@ export async function getAgentOverrides() {
 
 export async function addCustomAgent(agent: any) {
   try {
+    const sql = getSQL();
     await sql`
       INSERT INTO custom_agents (
         id, name, slug, description, category, tags, status, 
@@ -121,6 +138,7 @@ export async function addCustomAgent(agent: any) {
 
 export async function updateCustomAgent(id: string, updates: any) {
   try {
+    const sql = getSQL();
     // Simple approach: just update all fields that are provided
     // Using Vercel Postgres template syntax
     
@@ -151,6 +169,7 @@ export async function updateCustomAgent(id: string, updates: any) {
 
 export async function deleteCustomAgent(id: string) {
   try {
+    const sql = getSQL();
     await sql`
       DELETE FROM custom_agents WHERE id = ${id}
     `;
@@ -163,6 +182,7 @@ export async function deleteCustomAgent(id: string) {
 
 export async function upsertAgentOverride(agentId: string, updates: any) {
   try {
+    const sql = getSQL();
     // Insert or update agent override
     await sql`
       INSERT INTO agent_overrides (
@@ -200,6 +220,7 @@ export async function upsertAgentOverride(agentId: string, updates: any) {
 
 export async function deleteAgentOverride(agentId: string) {
   try {
+    const sql = getSQL();
     await sql`
       DELETE FROM agent_overrides WHERE agent_id = ${agentId}
     `;
