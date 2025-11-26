@@ -17,26 +17,13 @@ export function AgentModal({ agent, isOpen, onClose }: AgentModalProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [loadingTimeout, setLoadingTimeout] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       setIsLoading(true);
       setHasError(false);
-      setLoadingTimeout(false);
       document.body.style.overflow = "hidden";
-
-      // Set a timeout to detect if iframe is blocked or taking too long
-      const timeout = setTimeout(() => {
-        if (isLoading) {
-          setLoadingTimeout(true);
-          setIsLoading(false);
-        }
-      }, 10000); // 10 seconds timeout
-
-      return () => clearTimeout(timeout);
     } else {
       document.body.style.overflow = "unset";
     }
@@ -44,7 +31,7 @@ export function AgentModal({ agent, isOpen, onClose }: AgentModalProps) {
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, [isOpen, isLoading]);
+  }, [isOpen]);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -136,15 +123,6 @@ export function AgentModal({ agent, isOpen, onClose }: AgentModalProps) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => window.open(agent.vercelUrl, '_blank')}
-                    className="rounded-full hover:bg-white/50 dark:hover:bg-black/30 backdrop-blur-sm hover:scale-110 transition-all"
-                    title="Open in New Tab"
-                  >
-                    <ExternalLink className="h-5 w-5" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
                     onClick={toggleFullscreen}
                     className="rounded-full hover:bg-white/50 dark:hover:bg-black/30 backdrop-blur-sm hover:scale-110 transition-all"
                     title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
@@ -178,54 +156,37 @@ export function AgentModal({ agent, isOpen, onClose }: AgentModalProps) {
                   </div>
                 )}
 
-                {(hasError || loadingTimeout) && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-[#1a2332] p-8 z-10">
+                {hasError && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-[#1a2332] p-8">
                     <AlertCircle className="h-16 w-16 text-orange-500 mb-4" />
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                      {loadingTimeout ? "Unable to Embed Agent" : "Failed to Load Agent"}
+                      Failed to Load Agent
                     </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 text-center mb-6 max-w-md">
-                      {loadingTimeout 
-                        ? "This agent cannot be displayed in an embedded view due to security settings. Please open it in a new tab."
-                        : "The agent interface could not be loaded. Please try opening it in a new tab."}
+                    <p className="text-sm text-gray-600 dark:text-gray-400 text-center mb-4">
+                      The agent interface could not be loaded. Please try again later.
                     </p>
-                    <div className="flex gap-3">
-                      <Button
-                        onClick={() => window.open(agent.vercelUrl, '_blank')}
-                        className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 shadow-lg"
-                      >
-                        <ExternalLink className="mr-2 h-4 w-4" />
-                        Open in New Tab
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setHasError(false);
-                          setLoadingTimeout(false);
-                          setIsLoading(true);
-                        }}
-                      >
-                        Try Again
-                      </Button>
-                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setHasError(false);
+                        setIsLoading(true);
+                      }}
+                    >
+                      Try Again
+                    </Button>
                   </div>
                 )}
 
                 <iframe
-                  ref={iframeRef}
                   src={agent.vercelUrl}
                   className="w-full h-full border-0"
-                  onLoad={() => {
-                    setIsLoading(false);
-                    setLoadingTimeout(false);
-                  }}
+                  onLoad={() => setIsLoading(false)}
                   onError={() => {
                     setIsLoading(false);
                     setHasError(true);
                   }}
                   title={agent.name}
-                  sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
-                  allow="fullscreen"
+                  sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
                 />
               </div>
             </div>
