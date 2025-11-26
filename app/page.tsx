@@ -4,39 +4,34 @@ import { useState, useMemo, useEffect } from "react";
 import { Header } from "@/components/header";
 import { AgentCard } from "@/components/agent-card";
 import { AgentModal } from "@/components/agent-modal";
-import { agents } from "@/lib/data";
 import type { Agent } from "@/lib/types";
-import { Search, X } from "lucide-react";
+import { Search, X, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 export default function Home() {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [customAgents, setCustomAgents] = useState<Agent[]>([]);
-  const [agentOverrides, setAgentOverrides] = useState<Record<string, Partial<Agent>>>({});
+  const [allAgents, setAllAgents] = useState<Agent[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Load custom agents from localStorage
-    const stored = localStorage.getItem("customAgents");
-    if (stored) {
-      setCustomAgents(JSON.parse(stored));
-    }
-    
-    // Load agent overrides from localStorage
-    const overrides = localStorage.getItem("agentOverrides");
-    if (overrides) {
-      setAgentOverrides(JSON.parse(overrides));
-    }
-  }, []);
+    // Fetch agents from database
+    const fetchAgents = async () => {
+      try {
+        const response = await fetch('/api/agents');
+        if (response.ok) {
+          const data = await response.json();
+          setAllAgents(data.agents);
+        }
+      } catch (error) {
+        console.error('Error fetching agents:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const allAgents = useMemo(() => {
-    // Merge default agents with overrides
-    const defaultAgentsWithOverrides = agents.map(agent => ({
-      ...agent,
-      ...agentOverrides[agent.id]
-    }));
-    return [...defaultAgentsWithOverrides, ...customAgents];
-  }, [customAgents, agentOverrides]);
+    fetchAgents();
+  }, []);
 
   const filteredAgents = useMemo(() => {
     if (searchQuery === "") return allAgents;
@@ -113,40 +108,49 @@ export default function Home() {
             />
           </div>
           
-          {searchQuery && (
+          {searchQuery && !isLoading && (
             <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
               Found {filteredAgents.length} agent{filteredAgents.length !== 1 ? 's' : ''} matching "<span className="text-orange-600 dark:text-orange-400 font-medium">{searchQuery}</span>"
             </p>
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredAgents.map((agent) => (
-            <AgentCard
-              key={agent.id}
-              agent={agent}
-              onClick={() => setSelectedAgent(agent)}
-            />
-          ))}
-        </div>
-
-        {filteredAgents.length === 0 && (
-          <div className="text-center py-16">
-            <div className="inline-block p-12 rounded-3xl bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50">
-              <p className="text-gray-600 dark:text-gray-400 text-lg font-medium">
-                No agents found matching "{searchQuery}"
-              </p>
-              <p className="text-gray-500 dark:text-gray-500 text-sm mt-2">
-                Try a different search term
-              </p>
-              <button
-                onClick={() => setSearchQuery("")}
-                className="mt-4 px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg"
-              >
-                Clear Search
-              </button>
-            </div>
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <Loader2 className="h-12 w-12 animate-spin text-orange-600 dark:text-orange-400 mb-4" />
+            <p className="text-sm text-gray-600 dark:text-gray-400">Loading agents...</p>
           </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredAgents.map((agent) => (
+                <AgentCard
+                  key={agent.id}
+                  agent={agent}
+                  onClick={() => setSelectedAgent(agent)}
+                />
+              ))}
+            </div>
+
+            {filteredAgents.length === 0 && (
+              <div className="text-center py-16">
+                <div className="inline-block p-12 rounded-3xl bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50">
+                  <p className="text-gray-600 dark:text-gray-400 text-lg font-medium">
+                    No agents found matching "{searchQuery}"
+                  </p>
+                  <p className="text-gray-500 dark:text-gray-500 text-sm mt-2">
+                    Try a different search term
+                  </p>
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="mt-4 px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg"
+                  >
+                    Clear Search
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </main>
 

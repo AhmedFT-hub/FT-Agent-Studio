@@ -32,62 +32,77 @@ export default function SettingsPage() {
   const [tagInput, setTagInput] = useState("");
 
   useEffect(() => {
-    // Load custom agents from localStorage
-    const stored = localStorage.getItem("customAgents");
-    if (stored) {
-      setCustomAgents(JSON.parse(stored));
-    }
-    
-    // Load agent overrides from localStorage
-    const overrides = localStorage.getItem("agentOverrides");
-    if (overrides) {
-      setAgentOverrides(JSON.parse(overrides));
-    }
+    // Fetch agents from database
+    fetchAgents();
   }, []);
 
-  const saveAgents = (agents: Agent[]) => {
-    localStorage.setItem("customAgents", JSON.stringify(agents));
-    setCustomAgents(agents);
+  const fetchAgents = async () => {
+    try {
+      const response = await fetch('/api/agents');
+      if (response.ok) {
+        const data = await response.json();
+        setCustomAgents(data.customAgents);
+        setAgentOverrides(data.agentOverrides);
+      }
+    } catch (error) {
+      console.error('Error fetching agents:', error);
+    }
   };
 
-  const handleAddAgent = () => {
+  const handleAddAgent = async () => {
     if (!newAgent.name || !newAgent.description || !newAgent.vercelUrl) {
       alert("Please fill in all required fields (Name, Description, URL)");
       return;
     }
 
-    const agent: Agent = {
-      id: `custom-${Date.now()}`,
-      name: newAgent.name,
-      slug: newAgent.name.toLowerCase().replace(/\s+/g, "-"),
-      description: newAgent.description,
-      category: newAgent.category as any || "Other",
-      tags: newAgent.tags || [],
-      status: newAgent.status as any || "Live",
-      vercelUrl: newAgent.vercelUrl,
-      imageUrl: newAgent.imageUrl || "/agents/rate-intelligence.svg",
-      lastUpdated: new Date().toLocaleDateString("en-US", { month: "short", year: "numeric" }),
-      primaryActionLabel: newAgent.primaryActionLabel || "See it in action",
-    };
+    try {
+      const response = await fetch('/api/agents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newAgent),
+      });
 
-    saveAgents([...customAgents, agent]);
-    setIsAdding(false);
-    setNewAgent({
-      name: "",
-      description: "",
-      category: "Other",
-      tags: [],
-      status: "Live",
-      vercelUrl: "",
-      imageUrl: "/agents/rate-intelligence.svg",
-      primaryActionLabel: "See it in action",
-    });
-    setTagInput("");
+      if (response.ok) {
+        await fetchAgents();
+        setIsAdding(false);
+        setNewAgent({
+          name: "",
+          description: "",
+          category: "Other",
+          tags: [],
+          status: "Live",
+          vercelUrl: "",
+          imageUrl: "/agents/rate-intelligence.svg",
+          primaryActionLabel: "See it in action",
+        });
+        setTagInput("");
+        alert("Agent added successfully!");
+      } else {
+        alert("Failed to add agent");
+      }
+    } catch (error) {
+      console.error('Error adding agent:', error);
+      alert("Failed to add agent");
+    }
   };
 
-  const handleDeleteAgent = (id: string) => {
+  const handleDeleteAgent = async (id: string) => {
     if (confirm("Are you sure you want to delete this agent?")) {
-      saveAgents(customAgents.filter((a) => a.id !== id));
+      try {
+        const response = await fetch(`/api/agents?id=${id}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          await fetchAgents();
+          alert("Agent deleted successfully!");
+        } else {
+          alert("Failed to delete agent");
+        }
+      } catch (error) {
+        console.error('Error deleting agent:', error);
+        alert("Failed to delete agent");
+      }
     }
   };
 
@@ -115,59 +130,55 @@ export default function SettingsPage() {
     setTagInput("");
   };
 
-  const handleUpdateAgent = () => {
+  const handleUpdateAgent = async () => {
     if (!editingAgent || !newAgent.name || !newAgent.description || !newAgent.vercelUrl) {
       alert("Please fill in all required fields (Name, Description, URL)");
       return;
     }
 
-    if (isEditingDefault) {
-      // Update default agent override
-      const updatedOverrides = {
-        ...agentOverrides,
-        [editingAgent.id]: {
-          name: newAgent.name,
-          description: newAgent.description,
-          category: newAgent.category,
-          tags: newAgent.tags,
-          status: newAgent.status,
-          vercelUrl: newAgent.vercelUrl,
-          imageUrl: newAgent.imageUrl,
-          primaryActionLabel: newAgent.primaryActionLabel,
-        }
-      };
-      localStorage.setItem("agentOverrides", JSON.stringify(updatedOverrides));
-      setAgentOverrides(updatedOverrides);
-    } else {
-      // Update custom agent
-      const updatedAgent: Agent = {
-        ...editingAgent,
-        name: newAgent.name,
-        slug: newAgent.name.toLowerCase().replace(/\s+/g, "-"),
-        description: newAgent.description,
-        category: newAgent.category as any || "Other",
-        tags: newAgent.tags || [],
-        status: newAgent.status as any || "Live",
-        vercelUrl: newAgent.vercelUrl,
-        imageUrl: newAgent.imageUrl || "/agents/rate-intelligence.svg",
-        primaryActionLabel: newAgent.primaryActionLabel || "See it in action",
-      };
-      saveAgents(customAgents.map((a) => (a.id === editingAgent.id ? updatedAgent : a)));
+    try {
+      const response = await fetch('/api/agents', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingAgent.id,
+          isDefault: isEditingDefault,
+          updates: {
+            name: newAgent.name,
+            description: newAgent.description,
+            category: newAgent.category,
+            tags: newAgent.tags,
+            status: newAgent.status,
+            vercelUrl: newAgent.vercelUrl,
+            imageUrl: newAgent.imageUrl,
+            primaryActionLabel: newAgent.primaryActionLabel,
+          }
+        }),
+      });
+
+      if (response.ok) {
+        await fetchAgents();
+        setEditingAgent(null);
+        setIsEditingDefault(false);
+        setNewAgent({
+          name: "",
+          description: "",
+          category: "Other",
+          tags: [],
+          status: "Live",
+          vercelUrl: "",
+          imageUrl: "/agents/rate-intelligence.svg",
+          primaryActionLabel: "See it in action",
+        });
+        setTagInput("");
+        alert("Agent updated successfully!");
+      } else {
+        alert("Failed to update agent");
+      }
+    } catch (error) {
+      console.error('Error updating agent:', error);
+      alert("Failed to update agent");
     }
-    
-    setEditingAgent(null);
-    setIsEditingDefault(false);
-    setNewAgent({
-      name: "",
-      description: "",
-      category: "Other",
-      tags: [],
-      status: "Live",
-      vercelUrl: "",
-      imageUrl: "/agents/rate-intelligence.svg",
-      primaryActionLabel: "See it in action",
-    });
-    setTagInput("");
   };
 
   const handleCancelEdit = () => {
@@ -186,12 +197,23 @@ export default function SettingsPage() {
     setTagInput("");
   };
 
-  const handleResetAgent = (agentId: string) => {
+  const handleResetAgent = async (agentId: string) => {
     if (confirm("Reset this agent to default values?")) {
-      const updatedOverrides = { ...agentOverrides };
-      delete updatedOverrides[agentId];
-      localStorage.setItem("agentOverrides", JSON.stringify(updatedOverrides));
-      setAgentOverrides(updatedOverrides);
+      try {
+        const response = await fetch(`/api/agents?id=${agentId}&reset=true`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          await fetchAgents();
+          alert("Agent reset successfully!");
+        } else {
+          alert("Failed to reset agent");
+        }
+      } catch (error) {
+        console.error('Error resetting agent:', error);
+        alert("Failed to reset agent");
+      }
     }
   };
 
