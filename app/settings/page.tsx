@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Plus, Trash2, Save, Edit2, X } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Save, Edit2, X, Upload, Loader2 } from "lucide-react";
 import { Agent } from "@/lib/types";
 import { agents as defaultAgents } from "@/lib/data";
 
@@ -18,6 +18,7 @@ export default function SettingsPage() {
   const [isAdding, setIsAdding] = useState(false);
   const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
   const [isEditingDefault, setIsEditingDefault] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [newAgent, setNewAgent] = useState<Partial<Agent>>({
     name: "",
     description: "",
@@ -215,6 +216,59 @@ export default function SettingsPage() {
       ...newAgent,
       tags: (newAgent.tags || []).filter((t) => t !== tag),
     });
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+    if (!validTypes.includes(file.type)) {
+      alert('Please upload a valid image file (JPEG, PNG, GIF, WebP, or SVG)');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert('File too large. Maximum size is 5MB.');
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/upload-image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Upload failed');
+      }
+
+      const data = await response.json();
+      
+      // Update the image URL with the uploaded image URL
+      setNewAgent({
+        ...newAgent,
+        imageUrl: data.url,
+      });
+
+      alert('Image uploaded successfully!');
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert(error instanceof Error ? error.message : 'Failed to upload image. Please try again.');
+    } finally {
+      setIsUploading(false);
+      // Reset the file input
+      event.target.value = '';
+    }
   };
 
   return (
@@ -486,16 +540,59 @@ export default function SettingsPage() {
                     {/* Image URL */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Card Image URL
+                        Card Image
                       </label>
+                      
+                      {/* Upload Button */}
+                      <div className="flex gap-2 mb-3">
+                        <label className="flex-1">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            className="hidden"
+                            disabled={isUploading}
+                          />
+                          <div className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md border-2 border-dashed ${
+                            isUploading 
+                              ? 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 cursor-not-allowed' 
+                              : 'border-orange-300 dark:border-orange-700 hover:border-orange-400 dark:hover:border-orange-600 bg-orange-50/50 dark:bg-orange-950/20 cursor-pointer'
+                          } transition-colors`}>
+                            {isUploading ? (
+                              <>
+                                <Loader2 className="h-4 w-4 animate-spin text-orange-500" />
+                                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Uploading...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="h-4 w-4 text-orange-500" />
+                                <span className="text-sm font-medium text-orange-600 dark:text-orange-400">Upload Image</span>
+                              </>
+                            )}
+                          </div>
+                        </label>
+                      </div>
+
+                      {/* Or use URL */}
+                      <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                          <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                          <span className="bg-white dark:bg-[#1a2332] px-2 text-gray-500 dark:text-gray-400">
+                            Or use URL
+                          </span>
+                        </div>
+                      </div>
+
                       <Input
                         placeholder="/agents/your-image.svg or https://..."
                         value={newAgent.imageUrl}
                         onChange={(e) => setNewAgent({ ...newAgent, imageUrl: e.target.value })}
-                        className="bg-white dark:bg-[#0d1829]"
+                        className="bg-white dark:bg-[#0d1829] mt-3"
                       />
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        Path to image file (e.g., /agents/agent-name.svg) or full URL
+                        Upload an image or enter a path/URL manually
                       </p>
                       {newAgent.imageUrl && (
                         <div className="mt-3">
@@ -711,16 +808,59 @@ export default function SettingsPage() {
                       {/* Image URL */}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          Card Image URL
+                          Card Image
                         </label>
+                        
+                        {/* Upload Button */}
+                        <div className="flex gap-2 mb-3">
+                          <label className="flex-1">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleImageUpload}
+                              className="hidden"
+                              disabled={isUploading}
+                            />
+                            <div className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md border-2 border-dashed ${
+                              isUploading 
+                                ? 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 cursor-not-allowed' 
+                                : 'border-orange-300 dark:border-orange-700 hover:border-orange-400 dark:hover:border-orange-600 bg-orange-50/50 dark:bg-orange-950/20 cursor-pointer'
+                            } transition-colors`}>
+                              {isUploading ? (
+                                <>
+                                  <Loader2 className="h-4 w-4 animate-spin text-orange-500" />
+                                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Uploading...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Upload className="h-4 w-4 text-orange-500" />
+                                  <span className="text-sm font-medium text-orange-600 dark:text-orange-400">Upload Image</span>
+                                </>
+                              )}
+                            </div>
+                          </label>
+                        </div>
+
+                        {/* Or use URL */}
+                        <div className="relative">
+                          <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                          </div>
+                          <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-white dark:bg-[#1a2332] px-2 text-gray-500 dark:text-gray-400">
+                              Or use URL
+                            </span>
+                          </div>
+                        </div>
+
                         <Input
                           placeholder="/agents/your-image.svg or https://..."
                           value={newAgent.imageUrl}
                           onChange={(e) => setNewAgent({ ...newAgent, imageUrl: e.target.value })}
-                          className="bg-white dark:bg-[#0d1829]"
+                          className="bg-white dark:bg-[#0d1829] mt-3"
                         />
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          Path to image file (e.g., /agents/agent-name.svg) or full URL
+                          Upload an image or enter a path/URL manually
                         </p>
                         {newAgent.imageUrl && (
                           <div className="mt-3">
