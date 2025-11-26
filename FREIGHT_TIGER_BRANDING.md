@@ -133,3 +133,5 @@ The color scheme creates a professional, logistics-focused identity:
 - **Teal**: Innovation, technology, intelligence
 
 Perfect for a logistics AI platform that needs to convey both innovation and trustworthiness.
+
+

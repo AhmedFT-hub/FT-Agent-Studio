@@ -9,12 +9,15 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Plus, Trash2, Save, Edit2, X } from "lucide-react";
 import { Agent } from "@/lib/types";
+import { agents as defaultAgents } from "@/lib/data";
 
 export default function SettingsPage() {
   const router = useRouter();
   const [customAgents, setCustomAgents] = useState<Agent[]>([]);
+  const [agentOverrides, setAgentOverrides] = useState<Record<string, Partial<Agent>>>({});
   const [isAdding, setIsAdding] = useState(false);
   const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
+  const [isEditingDefault, setIsEditingDefault] = useState(false);
   const [newAgent, setNewAgent] = useState<Partial<Agent>>({
     name: "",
     description: "",
@@ -32,6 +35,12 @@ export default function SettingsPage() {
     const stored = localStorage.getItem("customAgents");
     if (stored) {
       setCustomAgents(JSON.parse(stored));
+    }
+    
+    // Load agent overrides from localStorage
+    const overrides = localStorage.getItem("agentOverrides");
+    if (overrides) {
+      setAgentOverrides(JSON.parse(overrides));
     }
   }, []);
 
@@ -98,8 +107,9 @@ export default function SettingsPage() {
     });
   };
 
-  const handleEditAgent = (agent: Agent) => {
+  const handleEditAgent = (agent: Agent, isDefault: boolean = false) => {
     setEditingAgent(agent);
+    setIsEditingDefault(isDefault);
     setNewAgent(agent);
     setTagInput("");
   };
@@ -110,21 +120,42 @@ export default function SettingsPage() {
       return;
     }
 
-    const updatedAgent: Agent = {
-      ...editingAgent,
-      name: newAgent.name,
-      slug: newAgent.name.toLowerCase().replace(/\s+/g, "-"),
-      description: newAgent.description,
-      category: newAgent.category as any || "Other",
-      tags: newAgent.tags || [],
-      status: newAgent.status as any || "Live",
-      vercelUrl: newAgent.vercelUrl,
-      imageUrl: newAgent.imageUrl || "/agents/rate-intelligence.svg",
-      primaryActionLabel: newAgent.primaryActionLabel || "See it in action",
-    };
-
-    saveAgents(customAgents.map((a) => (a.id === editingAgent.id ? updatedAgent : a)));
+    if (isEditingDefault) {
+      // Update default agent override
+      const updatedOverrides = {
+        ...agentOverrides,
+        [editingAgent.id]: {
+          name: newAgent.name,
+          description: newAgent.description,
+          category: newAgent.category,
+          tags: newAgent.tags,
+          status: newAgent.status,
+          vercelUrl: newAgent.vercelUrl,
+          imageUrl: newAgent.imageUrl,
+          primaryActionLabel: newAgent.primaryActionLabel,
+        }
+      };
+      localStorage.setItem("agentOverrides", JSON.stringify(updatedOverrides));
+      setAgentOverrides(updatedOverrides);
+    } else {
+      // Update custom agent
+      const updatedAgent: Agent = {
+        ...editingAgent,
+        name: newAgent.name,
+        slug: newAgent.name.toLowerCase().replace(/\s+/g, "-"),
+        description: newAgent.description,
+        category: newAgent.category as any || "Other",
+        tags: newAgent.tags || [],
+        status: newAgent.status as any || "Live",
+        vercelUrl: newAgent.vercelUrl,
+        imageUrl: newAgent.imageUrl || "/agents/rate-intelligence.svg",
+        primaryActionLabel: newAgent.primaryActionLabel || "See it in action",
+      };
+      saveAgents(customAgents.map((a) => (a.id === editingAgent.id ? updatedAgent : a)));
+    }
+    
     setEditingAgent(null);
+    setIsEditingDefault(false);
     setNewAgent({
       name: "",
       description: "",
@@ -140,6 +171,7 @@ export default function SettingsPage() {
 
   const handleCancelEdit = () => {
     setEditingAgent(null);
+    setIsEditingDefault(false);
     setNewAgent({
       name: "",
       description: "",
@@ -152,6 +184,21 @@ export default function SettingsPage() {
     });
     setTagInput("");
   };
+
+  const handleResetAgent = (agentId: string) => {
+    if (confirm("Reset this agent to default values?")) {
+      const updatedOverrides = { ...agentOverrides };
+      delete updatedOverrides[agentId];
+      localStorage.setItem("agentOverrides", JSON.stringify(updatedOverrides));
+      setAgentOverrides(updatedOverrides);
+    }
+  };
+
+  // Merge default agents with overrides
+  const displayDefaultAgents = defaultAgents.map(agent => ({
+    ...agent,
+    ...agentOverrides[agent.id]
+  }));
 
   const handleEditAddTag = () => {
     if (tagInput.trim() && newAgent.tags && !newAgent.tags.includes(tagInput.trim())) {
@@ -378,6 +425,135 @@ export default function SettingsPage() {
           </Card>
         )}
 
+        {/* Default Agents List */}
+        <div className="space-y-4 mb-12">
+          <h2 className="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
+            Default Agents ({displayDefaultAgents.length})
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Edit default agent URLs and details. Changes are saved locally and override the defaults.
+          </p>
+
+          <div className="grid gap-4">
+            {displayDefaultAgents.map((agent) => (
+              <Card
+                key={agent.id}
+                className="p-6 bg-white/80 dark:bg-[#1a2332]/80 backdrop-blur-xl border-gray-200/50 dark:border-gray-700/50"
+              >
+                {editingAgent?.id === agent.id && isEditingDefault ? (
+                  // Edit Form (same as custom agents)
+                  <div className="space-y-4">
+                    <h3 className="font-heading text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                      Edit Agent
+                    </h3>
+                    
+                    {/* Name */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Agent Name *
+                      </label>
+                      <Input
+                        value={newAgent.name}
+                        onChange={(e) => setNewAgent({ ...newAgent, name: e.target.value })}
+                        className="bg-white dark:bg-[#0d1829]"
+                      />
+                    </div>
+
+                    {/* Description */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Description *
+                      </label>
+                      <textarea
+                        value={newAgent.description}
+                        onChange={(e) => setNewAgent({ ...newAgent, description: e.target.value })}
+                        className="w-full min-h-[100px] px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#0d1829] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      />
+                    </div>
+
+                    {/* URL */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Agent URL *
+                      </label>
+                      <Input
+                        value={newAgent.vercelUrl}
+                        onChange={(e) => setNewAgent({ ...newAgent, vercelUrl: e.target.value })}
+                        className="bg-white dark:bg-[#0d1829]"
+                      />
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-3 pt-4">
+                      <Button
+                        onClick={handleUpdateAgent}
+                        className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 shadow-lg"
+                      >
+                        <Save className="mr-2 h-4 w-4" />
+                        Update Agent
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={handleCancelEdit}
+                      >
+                        <X className="mr-2 h-4 w-4" />
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  // Normal Display
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="font-heading text-xl font-bold text-gray-900 dark:text-gray-100">
+                          {agent.name}
+                        </h3>
+                        <Badge variant="outline">{agent.category}</Badge>
+                        {agentOverrides[agent.id] && (
+                          <Badge className="bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+                            Modified
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        {agent.description}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        URL: {agent.vercelUrl}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleEditAgent(agent, true)}
+                        className="text-orange-500 hover:text-orange-700 hover:bg-orange-50 dark:hover:bg-orange-900/20"
+                        title="Edit agent"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                      {agentOverrides[agent.id] && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleResetAgent(agent.id)}
+                          className="text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                          title="Reset to default"
+                        >
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                          </svg>
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </Card>
+            ))}
+          </div>
+        </div>
+
         {/* Custom Agents List */}
         <div className="space-y-4">
           <h2 className="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -574,4 +750,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
 

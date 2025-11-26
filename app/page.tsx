@@ -13,6 +13,7 @@ export default function Home() {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [customAgents, setCustomAgents] = useState<Agent[]>([]);
+  const [agentOverrides, setAgentOverrides] = useState<Record<string, Partial<Agent>>>({});
 
   useEffect(() => {
     // Load custom agents from localStorage
@@ -20,11 +21,22 @@ export default function Home() {
     if (stored) {
       setCustomAgents(JSON.parse(stored));
     }
+    
+    // Load agent overrides from localStorage
+    const overrides = localStorage.getItem("agentOverrides");
+    if (overrides) {
+      setAgentOverrides(JSON.parse(overrides));
+    }
   }, []);
 
   const allAgents = useMemo(() => {
-    return [...agents, ...customAgents];
-  }, [customAgents]);
+    // Merge default agents with overrides
+    const defaultAgentsWithOverrides = agents.map(agent => ({
+      ...agent,
+      ...agentOverrides[agent.id]
+    }));
+    return [...defaultAgentsWithOverrides, ...customAgents];
+  }, [customAgents, agentOverrides]);
 
   const filteredAgents = useMemo(() => {
     if (searchQuery === "") return allAgents;
@@ -146,3 +158,5 @@ export default function Home() {
     </div>
   );
 }
+
+

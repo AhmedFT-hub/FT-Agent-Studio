@@ -196,3 +196,5 @@ export function AgentModal({ agent, isOpen, onClose }: AgentModalProps) {
     </AnimatePresence>
   );
 }
+
+

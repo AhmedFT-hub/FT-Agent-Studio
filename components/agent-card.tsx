@@ -100,3 +100,5 @@ export function AgentCard({ agent, onClick }: AgentCardProps) {
     </motion.div>
   );
 }
+
+
