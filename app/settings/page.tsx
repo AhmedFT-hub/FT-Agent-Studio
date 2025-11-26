@@ -483,6 +483,38 @@ export default function SettingsPage() {
                       />
                     </div>
 
+                    {/* Image URL */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Card Image URL
+                      </label>
+                      <Input
+                        placeholder="/agents/your-image.svg or https://..."
+                        value={newAgent.imageUrl}
+                        onChange={(e) => setNewAgent({ ...newAgent, imageUrl: e.target.value })}
+                        className="bg-white dark:bg-[#0d1829]"
+                      />
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Path to image file (e.g., /agents/agent-name.svg) or full URL
+                      </p>
+                      {newAgent.imageUrl && (
+                        <div className="mt-3">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Preview:</p>
+                          <div className="relative h-32 w-full rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+                            <img
+                              src={newAgent.imageUrl}
+                              alt="Preview"
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = "none";
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
                     {/* Action Buttons */}
                     <div className="flex gap-3 pt-4">
                       <Button
@@ -674,6 +706,38 @@ export default function SettingsPage() {
                             </Badge>
                           ))}
                         </div>
+                      </div>
+
+                      {/* Image URL */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Card Image URL
+                        </label>
+                        <Input
+                          placeholder="/agents/your-image.svg or https://..."
+                          value={newAgent.imageUrl}
+                          onChange={(e) => setNewAgent({ ...newAgent, imageUrl: e.target.value })}
+                          className="bg-white dark:bg-[#0d1829]"
+                        />
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          Path to image file (e.g., /agents/agent-name.svg) or full URL
+                        </p>
+                        {newAgent.imageUrl && (
+                          <div className="mt-3">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Preview:</p>
+                            <div className="relative h-32 w-full rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+                              <img
+                                src={newAgent.imageUrl}
+                                alt="Preview"
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                  target.style.display = "none";
+                                }}
+                              />
+                            </div>
+                          </div>
+                        )}
                       </div>
 
                       {/* Action Buttons */}
