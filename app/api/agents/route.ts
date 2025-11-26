@@ -118,12 +118,8 @@ export async function PUT(request: Request) {
       // Update a default agent (store as override)
       result = await upsertAgentOverride(id, updates);
     } else {
-      // Update a custom agent
-      const updatedAgent = {
-        ...updates,
-        slug: updates.name.toLowerCase().replace(/\s+/g, '-'),
-      };
-      result = await updateCustomAgent(id, updatedAgent);
+      // Update a custom agent (slug is calculated in updateCustomAgent)
+      result = await updateCustomAgent(id, updates);
     }
 
     if (result.success) {

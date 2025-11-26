@@ -1,4 +1,6 @@
-import { sql } from '@vercel/postgres';
+import { neon } from '@neondatabase/serverless';
+
+const sql = neon(process.env.DATABASE_URL!);
 
 export async function initDB() {
   try {
@@ -119,19 +121,27 @@ export async function addCustomAgent(agent: any) {
 
 export async function updateCustomAgent(id: string, updates: any) {
   try {
+    // Simple approach: just update all fields that are provided
+    // Using Vercel Postgres template syntax
+    
+    if (updates.name !== undefined) {
+      updates.slug = updates.name.toLowerCase().replace(/\s+/g, '-');
+    }
+    
     await sql`
       UPDATE custom_agents SET
-        name = ${updates.name},
-        slug = ${updates.slug},
-        description = ${updates.description},
-        category = ${updates.category},
-        tags = ${JSON.stringify(updates.tags)}::jsonb,
-        status = ${updates.status},
-        vercel_url = ${updates.vercelUrl},
-        image_url = ${updates.imageUrl},
-        primary_action_label = ${updates.primaryActionLabel}
+        name = COALESCE(${updates.name}, name),
+        slug = COALESCE(${updates.slug}, slug),
+        description = COALESCE(${updates.description}, description),
+        category = COALESCE(${updates.category}, category),
+        tags = COALESCE(${JSON.stringify(updates.tags || null)}::jsonb, tags),
+        status = COALESCE(${updates.status}, status),
+        vercel_url = COALESCE(${updates.vercelUrl}, vercel_url),
+        image_url = COALESCE(${updates.imageUrl}, image_url),
+        primary_action_label = COALESCE(${updates.primaryActionLabel}, primary_action_label)
       WHERE id = ${id}
     `;
+    
     return { success: true };
   } catch (error) {
     console.error('Error updating custom agent:', error);
@@ -153,26 +163,34 @@ export async function deleteCustomAgent(id: string) {
 
 export async function upsertAgentOverride(agentId: string, updates: any) {
   try {
+    // Insert or update agent override
     await sql`
       INSERT INTO agent_overrides (
         agent_id, name, description, category, tags, status,
         vercel_url, image_url, primary_action_label
       ) VALUES (
-        ${agentId}, ${updates.name}, ${updates.description}, ${updates.category},
-        ${JSON.stringify(updates.tags)}::jsonb, ${updates.status},
-        ${updates.vercelUrl}, ${updates.imageUrl}, ${updates.primaryActionLabel}
+        ${agentId}, 
+        ${updates.name || null}, 
+        ${updates.description || null}, 
+        ${updates.category || null},
+        ${JSON.stringify(updates.tags || null)}::jsonb, 
+        ${updates.status || null},
+        ${updates.vercelUrl || null}, 
+        ${updates.imageUrl || null}, 
+        ${updates.primaryActionLabel || null}
       )
       ON CONFLICT (agent_id) DO UPDATE SET
-        name = EXCLUDED.name,
-        description = EXCLUDED.description,
-        category = EXCLUDED.category,
-        tags = EXCLUDED.tags,
-        status = EXCLUDED.status,
-        vercel_url = EXCLUDED.vercel_url,
-        image_url = EXCLUDED.image_url,
-        primary_action_label = EXCLUDED.primary_action_label,
+        name = COALESCE(EXCLUDED.name, agent_overrides.name),
+        description = COALESCE(EXCLUDED.description, agent_overrides.description),
+        category = COALESCE(EXCLUDED.category, agent_overrides.category),
+        tags = COALESCE(EXCLUDED.tags, agent_overrides.tags),
+        status = COALESCE(EXCLUDED.status, agent_overrides.status),
+        vercel_url = COALESCE(EXCLUDED.vercel_url, agent_overrides.vercel_url),
+        image_url = COALESCE(EXCLUDED.image_url, agent_overrides.image_url),
+        primary_action_label = COALESCE(EXCLUDED.primary_action_label, agent_overrides.primary_action_label),
         updated_at = NOW()
     `;
+    
     return { success: true };
   } catch (error) {
     console.error('Error upserting agent override:', error);
