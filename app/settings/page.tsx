@@ -433,17 +433,76 @@ export default function SettingsPage() {
               {/* Image URL */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Image URL (optional)
+                  Card Image (optional)
                 </label>
+                
+                {/* Upload Button */}
+                <div className="flex gap-2 mb-3">
+                  <label className="flex-1">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      disabled={isUploading}
+                    />
+                    <div className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md border-2 border-dashed ${
+                      isUploading 
+                        ? 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 cursor-not-allowed' 
+                        : 'border-orange-300 dark:border-orange-700 hover:border-orange-400 dark:hover:border-orange-600 bg-orange-50/50 dark:bg-orange-950/20 cursor-pointer'
+                    } transition-colors`}>
+                      {isUploading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin text-orange-500" />
+                          <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Uploading...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="h-4 w-4 text-orange-500" />
+                          <span className="text-sm font-medium text-orange-600 dark:text-orange-400">Upload Image</span>
+                        </>
+                      )}
+                    </div>
+                  </label>
+                </div>
+
+                {/* Or use URL */}
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-white dark:bg-[#1a2332] px-2 text-gray-500 dark:text-gray-400">
+                      Or use URL
+                    </span>
+                  </div>
+                </div>
+
                 <Input
-                  placeholder="/agents/your-image.svg"
+                  placeholder="/agents/your-image.svg or https://..."
                   value={newAgent.imageUrl}
                   onChange={(e) => setNewAgent({ ...newAgent, imageUrl: e.target.value })}
-                  className="bg-white dark:bg-[#0d1829]"
+                  className="bg-white dark:bg-[#0d1829] mt-3"
                 />
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Leave blank to use default image
+                  Upload an image or enter a path/URL manually
                 </p>
+                {newAgent.imageUrl && (
+                  <div className="mt-3">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Preview:</p>
+                    <div className="relative h-32 w-full rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+                      <img
+                        src={newAgent.imageUrl}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = "none";
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons */}
